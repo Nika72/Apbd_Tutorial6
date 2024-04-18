@@ -104,27 +104,22 @@ namespace Tutorial6.Repositories
             // SQL query to insert a new animal into the database
             string sqlQuery = @"INSERT INTO Animal (Name, Description, Category, Area)
                 VALUES (@Name, @Description, @Category, @Area);
-                SELECT SCOPE_IDENTITY();"; // Retrieve the last inserted ID
+                SELECT SCOPE_IDENTITY();";
 
-            // Establishing a connection to the database
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                // Create a SqlCommand object with the SQL query and connection
                 using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                 {
-                    // Adding parameters for the animal's properties to the command
                     command.Parameters.AddWithValue("@Name", animal.Name);
                     command.Parameters.AddWithValue("@Description", animal.Description);
                     command.Parameters.AddWithValue("@Category", animal.Category);
                     command.Parameters.AddWithValue("@Area", animal.Area);
 
-                    // Execute the SQL query to insert the animal into the database
-                    // Retrieve the last inserted ID using SCOPE_IDENTITY()
+                    
                     int insertedId = Convert.ToInt32(command.ExecuteScalar());
             
-                    // Set the generated 'Id' back to the animal object
                     animal.Id = insertedId;
                 }
             }
