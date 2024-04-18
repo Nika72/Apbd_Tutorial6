@@ -99,11 +99,12 @@ namespace Tutorial6.Repositories
         }
     
 
-    public void AddAnimal(Animal animal)
+        public void AddAnimal(Animal animal)
         {
             // SQL query to insert a new animal into the database
             string sqlQuery = @"INSERT INTO Animal (Name, Description, Category, Area)
-                        VALUES (@Name, @Description, @Category, @Area)";
+                VALUES (@Name, @Description, @Category, @Area);
+                SELECT SCOPE_IDENTITY();"; // Retrieve the last inserted ID
 
             // Establishing a connection to the database
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -119,11 +120,16 @@ namespace Tutorial6.Repositories
                     command.Parameters.AddWithValue("@Category", animal.Category);
                     command.Parameters.AddWithValue("@Area", animal.Area);
 
-                    // Executing the SQL query to insert the animal into the database
-                    command.ExecuteNonQuery();
+                    // Execute the SQL query to insert the animal into the database
+                    // Retrieve the last inserted ID using SCOPE_IDENTITY()
+                    int insertedId = Convert.ToInt32(command.ExecuteScalar());
+            
+                    // Set the generated 'Id' back to the animal object
+                    animal.Id = insertedId;
                 }
             }
         }
+
 
 
         public void UpdateAnimal(Animal animal)
