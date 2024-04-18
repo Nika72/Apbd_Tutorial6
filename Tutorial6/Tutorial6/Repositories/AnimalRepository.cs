@@ -105,7 +105,7 @@ namespace Tutorial6.Repositories
             string sqlQuery = @"INSERT INTO Animal (Name, Description, Category, Area)
                         VALUES (@Name, @Description, @Category, @Area)";
 
-            // Establish a connection to the database
+            // Establishing a connection to the database
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -113,13 +113,13 @@ namespace Tutorial6.Repositories
                 // Create a SqlCommand object with the SQL query and connection
                 using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                 {
-                    // Add parameters for the animal's properties to the command
+                    // Adding parameters for the animal's properties to the command
                     command.Parameters.AddWithValue("@Name", animal.Name);
                     command.Parameters.AddWithValue("@Description", animal.Description);
                     command.Parameters.AddWithValue("@Category", animal.Category);
                     command.Parameters.AddWithValue("@Area", animal.Area);
 
-                    // Execute the SQL query to insert the animal into the database
+                    // Executing the SQL query to insert the animal into the database
                     command.ExecuteNonQuery();
                 }
             }
@@ -134,7 +134,7 @@ namespace Tutorial6.Repositories
                             Category = @Category, Area = @Area 
                         WHERE IdAnimal = @Id";
 
-            // Establish a connection to the database
+            // Establishing a connection to the database
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();

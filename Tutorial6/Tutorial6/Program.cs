@@ -1,3 +1,4 @@
+using Tutorial6.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+// Configure the app configuration to use appsettings.json
+var configuration = builder.Configuration;
+builder.Services.AddSingleton(configuration);
+
+// Configure the connection string
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+// Register AnimalRepository service with the connection string
+builder.Services.AddScoped<AnimalRepository>(_ => new AnimalRepository(connectionString));
 
 var app = builder.Build();
 

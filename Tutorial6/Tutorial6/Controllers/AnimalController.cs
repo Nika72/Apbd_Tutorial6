@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Tutorial6.Repositories;
-using System.Collections.Generic; // Add this namespace for List<Animal>
+using System.Collections.Generic; 
 
 namespace Tutorial6.Controllers
 {
