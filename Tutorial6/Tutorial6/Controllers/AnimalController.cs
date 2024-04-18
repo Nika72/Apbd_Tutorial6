@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using Tutorial6.Repositories;
+using System.Collections.Generic; // Add this namespace for List<Animal>
 
 namespace Tutorial6.Controllers
 {
@@ -48,6 +48,87 @@ namespace Tutorial6.Controllers
             }
         }
 
-        // Implement other endpoints for adding and updating animals here
+        [HttpPost]
+        public IActionResult AddAnimal([FromBody] Animal animal)
+        {
+            try
+            {
+                if (animal == null)
+                {
+                    return BadRequest("Animal data is missing.");
+                }
+
+                // Validate animal data
+                if (string.IsNullOrWhiteSpace(animal.Name) || string.IsNullOrWhiteSpace(animal.Description) ||
+                    string.IsNullOrWhiteSpace(animal.Category) || string.IsNullOrWhiteSpace(animal.Area))
+                {
+                    return BadRequest("All fields (Name, Description, Category, Area) are required.");
+                }
+
+                _animalRepository.AddAnimal(animal);
+
+                return StatusCode(201);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateAnimal(int id, [FromBody] Animal animal)
+        {
+            try
+            {
+                if (animal == null)
+                {
+                    return BadRequest("Animal data is missing.");
+                }
+
+                // Validate animal data
+                if (string.IsNullOrWhiteSpace(animal.Name) || string.IsNullOrWhiteSpace(animal.Description) ||
+                    string.IsNullOrWhiteSpace(animal.Category) || string.IsNullOrWhiteSpace(animal.Area))
+                {
+                    return BadRequest("All fields (Name, Description, Category, Area) are required.");
+                }
+
+                var existingAnimal = _animalRepository.GetAnimalById(id);
+                if (existingAnimal == null)
+                {
+                    _animalRepository.AddAnimal(animal);
+                    return StatusCode(201);
+                }
+                else
+                {
+                    animal.Id = id; // Ensure the correct ID is set for the update
+                    _animalRepository.UpdateAnimal(animal);
+                    return StatusCode(204);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAnimal(int id)
+        {
+            try
+            {
+                var existingAnimal = _animalRepository.GetAnimalById(id);
+                if (existingAnimal == null)
+                {
+                    return NotFound($"Animal with ID {id} is not found.");
+                }
+
+                _animalRepository.DeleteAnimal(id);
+                return StatusCode(204); // No content, successful deletion
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

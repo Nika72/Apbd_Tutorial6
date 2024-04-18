@@ -156,6 +156,21 @@ namespace Tutorial6.Repositories
         }
 
 
-        // Add other methods for database operations here
+        public void DeleteAnimal(int id)
+        {
+            string sqlQuery = "DELETE FROM Animal WHERE IdAnimal = @Id";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
